@@ -19,8 +19,12 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-annotations:22.2.1'
+    compile 'com.android.support:palette-v7:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+
+    compile 'com.android.support:support-annotations:23.3.0'
     compile 'com.gu:option:1.3'
     compile 'com.github.frankiesardo:auto-parcel:0.3.1'
     compile 'com.google.auto.value:auto-value:1.1'
@@ -38,12 +42,12 @@ dependencies {
 }
 
 android {
-  compileSdkVersion 22
-  buildToolsVersion '23.0.1'
+  compileSdkVersion 23
+  buildToolsVersion '23.0.2'
 
   defaultConfig {
-    minSdkVersion 11
-    targetSdkVersion 22
+    minSdkVersion 16
+    targetSdkVersion 23
   }
 
   lintOptions {
@@ -61,7 +65,7 @@ checkstyle {
   showViolations true
 }
 
-apply from: 'https://raw.githubusercontent.com/robbypond/gradle-mvn-push/8f35c0555e9c71154c08dfde9397340099f8dc9f/gradle-mvn-push.gradle'
+//apply from: 'https://raw.githubusercontent.com/robbypond/gradle-mvn-push/8f35c0555e9c71154c08dfde9397340099f8dc9f/gradle-mvn-push.gradle'
 
 
 gradle.taskGraph.whenReady { taskGraph ->
