@@ -2,15 +2,15 @@ package net.rdrei.android.dirchooser;
 
 import android.os.Parcelable;
 
-import auto.parcel.AutoParcel;
+import com.google.auto.value.AutoValue;
 
-@AutoParcel
+@AutoValue
 public abstract class DirectoryChooserConfig implements Parcelable {
     /**
      * @return Builder for a new DirectoryChooserConfig.
      */
     public static Builder builder() {
-        return new AutoParcel_DirectoryChooserConfig.Builder()
+        return new AutoValue_DirectoryChooserConfig.Builder()
                 .initialDirectory("")
                 .allowNewDirectoryNameModification(false)
                 .allowReadOnlyDirectory(false);
@@ -45,7 +45,7 @@ public abstract class DirectoryChooserConfig implements Parcelable {
      */
     abstract boolean allowNewDirectoryNameModification();
 
-    @AutoParcel.Builder
+    @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder newDirectoryName(String s);
         public abstract Builder initialDirectory(String s);
