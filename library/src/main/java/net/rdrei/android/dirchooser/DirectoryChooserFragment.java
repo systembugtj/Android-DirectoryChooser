@@ -400,6 +400,8 @@ public class DirectoryChooserFragment extends DialogFragment {
                 for (final File f : contents) {
                     if (f.isDirectory()) {
                         numDirectories++;
+                    } else if (f.getName().indexOf(".mp4") > 0){
+                        numDirectories++;
                     }
                 }
                 mFilesInDir = new File[numDirectories];
@@ -408,6 +410,8 @@ public class DirectoryChooserFragment extends DialogFragment {
                     if (contents[counter].isDirectory()) {
                         mFilesInDir[i] = contents[counter];
                         mFilenames.add(contents[counter].getName());
+                        i++;
+                    } else if (contents[counter].getName().indexOf(".mp4") > 0){
                         i++;
                     }
                 }
