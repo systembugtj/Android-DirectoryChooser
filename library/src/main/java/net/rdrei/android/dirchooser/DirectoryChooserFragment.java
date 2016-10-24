@@ -140,7 +140,7 @@ public class DirectoryChooserFragment extends DialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         assert getActivity() != null;
         final View view = inflater.inflate(R.layout.directory_chooser, container, false);
@@ -179,7 +179,7 @@ public class DirectoryChooserFragment extends DialogFragment {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
+                                    final int position, final long id) {
                 debug("Selected index: %d", position);
                 if (mFilesInDir != null && position >= 0
                         && position < mFilesInDir.length) {
@@ -400,7 +400,7 @@ public class DirectoryChooserFragment extends DialogFragment {
                 for (final File f : contents) {
                     if (f.isDirectory()) {
                         numDirectories++;
-                    } else if (f.getName().indexOf(".mp4") > 0){
+                    } else if (f.getName().indexOf(".mp4") > 0) {
                         numDirectories++;
                     }
                 }
@@ -411,7 +411,7 @@ public class DirectoryChooserFragment extends DialogFragment {
                         mFilesInDir[i] = contents[counter];
                         mFilenames.add(contents[counter].getName());
                         i++;
-                    } else if (contents[counter].getName().indexOf(".mp4") > 0){
+                    } else if (contents[counter].getName().indexOf(".mp4") > 0) {
                         i++;
                     }
                 }
