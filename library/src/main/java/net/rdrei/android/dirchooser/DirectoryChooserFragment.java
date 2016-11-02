@@ -398,20 +398,16 @@ public class DirectoryChooserFragment extends DialogFragment {
             if (contents != null) {
                 int numDirectories = 0;
                 for (final File f : contents) {
-                    if (f.isDirectory()) {
-                        numDirectories++;
-                    } else if (f.getName().indexOf(".mp4") > 0) {
+                    if (isAcceptableItem(f)) {
                         numDirectories++;
                     }
                 }
                 mFilesInDir = new File[numDirectories];
                 mFilenames.clear();
                 for (int i = 0, counter = 0; i < numDirectories; counter++) {
-                    if (contents[counter].isDirectory()) {
+                    if (isAcceptableItem(contents[counter])) {
                         mFilesInDir[i] = contents[counter];
                         mFilenames.add(contents[counter].getName());
-                        i++;
-                    } else if (contents[counter].getName().indexOf(".mp4") > 0) {
                         i++;
                     }
                 }
@@ -428,6 +424,12 @@ public class DirectoryChooserFragment extends DialogFragment {
             }
         }
         refreshButtonState();
+    }
+
+    private boolean isAcceptableItem(File file) {
+        return file.isDirectory() ||
+                file.getName().indexOf(".mp4") > 0 ||
+                file.getName().indexOf(".avi") > 0;
     }
 
     /**
