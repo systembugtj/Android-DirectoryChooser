@@ -1,5 +1,6 @@
 package net.rdrei.android.dirchooser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.FragmentManager;
@@ -9,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 /**
  * Let's the user choose a directory on the storage device. The selected folder
@@ -20,11 +23,15 @@ public class DirectoryChooserActivity extends AppCompatActivity implements
     public static final String RESULT_SELECTED_DIR = "selected_dir";
     public static final int RESULT_CODE_DIR_SELECTED = 1;
 
+    RxPermissions rxPermissions;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
         setContentView(R.layout.directory_chooser_activity);
+
+        rxPermissions = new RxPermissions(this);
 
         final DirectoryChooserConfig config = getIntent().getParcelableExtra(EXTRA_CONFIG);
 
@@ -33,13 +40,20 @@ public class DirectoryChooserActivity extends AppCompatActivity implements
                     "You must provide EXTRA_CONFIG when starting the DirectoryChooserActivity.");
         }
 
-        if (savedInstanceState == null) {
-            final FragmentManager fragmentManager = getFragmentManager();
-            final DirectoryChooserFragment fragment = DirectoryChooserFragment.newInstance(config);
-            fragmentManager.beginTransaction()
-                    .add(R.id.main, fragment)
-                    .commit();
-        }
+        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) { // Always true pre-M
+                        if (savedInstanceState == null) {
+                            final FragmentManager fragmentManager = getFragmentManager();
+                            final DirectoryChooserFragment fragment = DirectoryChooserFragment.newInstance(config);
+                            fragmentManager.beginTransaction()
+                                    .add(R.id.main, fragment)
+                                    .commit();
+                        }
+                    } else {
+                        finish();
+                    }
+                });
     }
 
     /* package */void setupActionBar() {

@@ -1,5 +1,6 @@
 package net.rdrei.android.dirchooser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,8 +36,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gu.option.Option;
-import com.gu.option.UnitFunction;
+import com.google.common.base.Optional;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class DirectoryChooserFragment extends DialogFragment {
     private String mNewDirectoryName;
     private String mInitialDirectory;
 
-    private Option<OnFragmentInteractionListener> mListener = Option.none();
+    private Optional<OnFragmentInteractionListener> mListener = Optional.absent();
 
     private Button mBtnConfirm;
     private Button mBtnCancel;
@@ -139,6 +140,9 @@ public class DirectoryChooserFragment extends DialogFragment {
     }
 
     @Override
+    public void onViewCreated (View view, Bundle savedInstanceState) {
+    }
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
 
@@ -162,16 +166,9 @@ public class DirectoryChooserFragment extends DialogFragment {
             }
         });
 
-        mBtnCancel.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                mListener.foreach(new UnitFunction<OnFragmentInteractionListener>() {
-                    @Override
-                    public void apply(final OnFragmentInteractionListener listener) {
-                        listener.onCancelChooser();
-                    }
-                });
+        mBtnCancel.setOnClickListener(view1 -> {
+            if (mListener.isPresent()) {
+                mListener.get().onCancelChooser();
             }
         });
 
@@ -259,11 +256,11 @@ public class DirectoryChooserFragment extends DialogFragment {
         super.onAttach(activity);
 
         if (activity instanceof OnFragmentInteractionListener) {
-            mListener = Option.some((OnFragmentInteractionListener) activity);
+            mListener =  Optional.of((OnFragmentInteractionListener) activity);
         } else {
             Fragment owner = getTargetFragment();
             if (owner instanceof OnFragmentInteractionListener) {
-                mListener = Option.some((OnFragmentInteractionListener) owner);
+                mListener = Optional.of((OnFragmentInteractionListener) owner);
             }
         }
     }
@@ -389,6 +386,7 @@ public class DirectoryChooserFragment extends DialogFragment {
      *            will not be changed
      */
     private void changeDirectory(final File dir) {
+
         if (dir == null) {
             debug("Could not change folder: dir was null");
         } else if (!dir.isDirectory()) {
@@ -484,19 +482,13 @@ public class DirectoryChooserFragment extends DialogFragment {
     private void returnSelectedFolder() {
         if (mSelectedDir != null) {
             debug("Returning %s as result", mSelectedDir.getAbsolutePath());
-            mListener.foreach(new UnitFunction<OnFragmentInteractionListener>() {
-                @Override
-                public void apply(final OnFragmentInteractionListener f) {
-                    f.onSelectDirectory(mSelectedDir.getAbsolutePath());
-                }
-            });
+            if (mListener.isPresent()) {
+                mListener.get().onSelectDirectory(mSelectedDir.getAbsolutePath());
+            }
         } else {
-            mListener.foreach(new UnitFunction<OnFragmentInteractionListener>() {
-                @Override
-                public void apply(final OnFragmentInteractionListener f) {
-                    f.onCancelChooser();
-                }
-            });
+            if (mListener.isPresent()) {
+                mListener.get().onCancelChooser();
+            }
         }
 
     }
@@ -540,7 +532,7 @@ public class DirectoryChooserFragment extends DialogFragment {
     }
 
     public void setDirectoryChooserListener(@Nullable final OnFragmentInteractionListener listener) {
-        mListener = Option.option(listener);
+        mListener = Optional.of(listener);
     }
 
     /**
